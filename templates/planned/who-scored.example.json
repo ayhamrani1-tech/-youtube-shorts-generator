@@ -1,0 +1,12 @@
+{
+  "_status": "PLANNED — not yet buildable. Do not use broadcast footage or screenshots of goals (copyrighted).",
+  "schema": "fvs/1", "type": "who-scored", "slug": "example-goal",
+  "language": "ar", "orientation": "portrait", "width": 1080, "height": 1920, "fps": 30, "targetSeconds": [30, 45],
+  "voice": { "engine": "clipchamp", "status": "pending" },
+  "data": {
+    "match": { "home": "…", "away": "…", "competition": "…", "date": "YYYY-MM-DD", "minute": "…", "score": "…" },
+    "hints": ["…", "…", "…"],
+    "answer": { "name": "…", "sub": "…", "photo": null, "credit": "" },
+    "sources": ["https://…"]
+  }
+}

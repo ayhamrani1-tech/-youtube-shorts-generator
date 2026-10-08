@@ -1,0 +1,6 @@
+# Keep text files with LF in the repository (scripts and JSON are written with LF on this machine)
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.png binary
+*.jpg binary
+*.m4a binary

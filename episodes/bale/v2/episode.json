@@ -1,0 +1,195 @@
+{
+  "slug": "bale_v2",
+  "title": "خمّن اللاعب من انتقالاته",
+  "answer": "غاريث بيل",
+  "canva": {
+    "design_id": "DAHXWMJz0OY",
+    "edit_url": "https://www.canva.com/d/FzYFSpcEXwrh7y7",
+    "note": "v2 copy of DAHXV3JkknM (v1 untouched). Page N = frames/NN.png. 15 pages: hook, 6 clues, 5 countdown, mystery, reveal, outro."
+  },
+  "sources": "../sources.md",
+  "attribution": "ATTRIBUTION.md",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "hook",
+      "frame": 1,
+      "seconds": 3.5,
+      "motion": "push",
+      "narration": "خَمِّنِ اللَّاعِبَ مِنِ انْتِقَالَاتِهِ!"
+    },
+    {
+      "id": "c1",
+      "frame": 2,
+      "seconds": 4.3,
+      "enter": {
+        "type": "slideleft",
+        "d": 0.5
+      },
+      "whoosh": true,
+      "narration": "بَدَأَ مَعَ سَاوْثْهَامْبْتُون، عَامَ أَلْفَيْنِ وَسِتَّة."
+    },
+    {
+      "id": "c2",
+      "frame": 3,
+      "seconds": 4.3,
+      "enter": {
+        "type": "wipeleft",
+        "d": 0.5
+      },
+      "whoosh": true,
+      "narration": "ثُمَّ انْتَقَلَ إِلَى تُوتِنْهَام."
+    },
+    {
+      "id": "c3",
+      "frame": 4,
+      "seconds": 4.5,
+      "enter": {
+        "type": "wipeleft",
+        "d": 0.5
+      },
+      "whoosh": true,
+      "narration": "ثُمَّ رِيَال مَدْرِيد، فِي صَفْقَةٍ قِيَاسِيَّةٍ عَالَمِيَّة."
+    },
+    {
+      "id": "c4",
+      "frame": 5,
+      "seconds": 4.3,
+      "enter": {
+        "type": "wipeleft",
+        "d": 0.5
+      },
+      "whoosh": true,
+      "narration": "ثُمَّ عَادَ إِلَى تُوتِنْهَام مُعَارًا."
+    },
+    {
+      "id": "c5",
+      "frame": 6,
+      "seconds": 4.3,
+      "enter": {
+        "type": "wipeleft",
+        "d": 0.5
+      },
+      "whoosh": true,
+      "narration": "وَرَجَعَ إِلَى رِيَال مَدْرِيد."
+    },
+    {
+      "id": "c6",
+      "frame": 7,
+      "seconds": 4.3,
+      "enter": {
+        "type": "wipeleft",
+        "d": 0.5
+      },
+      "whoosh": true,
+      "narration": "وَأَنْهَى مَسِيرَتَهُ مَعَ لُوس أَنْجِلُوس إِف سِي."
+    },
+    {
+      "id": "n5",
+      "frame": 8,
+      "seconds": 1,
+      "type": "count",
+      "enter": {
+        "type": "wipeup",
+        "d": 0.4
+      },
+      "pop": [
+        320,
+        250,
+        440,
+        440
+      ]
+    },
+    {
+      "id": "n4",
+      "frame": 9,
+      "seconds": 1,
+      "type": "count",
+      "pop": [
+        320,
+        250,
+        440,
+        440
+      ]
+    },
+    {
+      "id": "n3",
+      "frame": 10,
+      "seconds": 1,
+      "type": "count",
+      "pop": [
+        320,
+        250,
+        440,
+        440
+      ]
+    },
+    {
+      "id": "n2",
+      "frame": 11,
+      "seconds": 1,
+      "type": "count",
+      "pop": [
+        320,
+        250,
+        440,
+        440
+      ]
+    },
+    {
+      "id": "n1",
+      "frame": 12,
+      "seconds": 1,
+      "type": "count",
+      "pop": [
+        320,
+        250,
+        440,
+        440
+      ]
+    },
+    {
+      "id": "mystery",
+      "frame": 13,
+      "seconds": 0.9,
+      "enter": {
+        "type": "fadewhite",
+        "d": 0.3
+      }
+    },
+    {
+      "id": "reveal",
+      "frame": 14,
+      "seconds": 4.6,
+      "type": "reveal",
+      "enter": {
+        "type": "circleopen",
+        "d": 0.5
+      },
+      "pop": [
+        60,
+        975,
+        960,
+        330
+      ],
+      "popAt": 0.5,
+      "narration": "إِنَّهُ النَّجْمُ الْوِيلْزِيُّ، غَارِيث بِيل!"
+    },
+    {
+      "id": "outro",
+      "frame": 15,
+      "seconds": 3.2,
+      "enter": {
+        "type": "slideup",
+        "d": 0.5
+      },
+      "narration": "هَلْ عَرَفْتَهُ؟ اكْتُبْ فِي التَّعْلِيقَات."
+    }
+  ],
+  "targetSeconds": [
+    35,
+    45
+  ]
+}

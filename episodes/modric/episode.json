@@ -1,0 +1,56 @@
+{
+  "schema": "fvs/1",
+  "type": "transfer-history",
+  "slug": "modric",
+  "subject": { "name_ar": "لوكا مودريتش", "name_en": "Luka Modrić" },
+  "language": "ar",
+  "orientation": "portrait",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "targetSeconds": [35, 55],
+  "voice": {
+    "engine": "clipchamp",
+    "status": "pending",
+    "draft": "espeak",
+    "note": "Final narration = manual Clipchamp export (see narration/SCRIPT.md). eSpeak is only a timing draft."
+  },
+  "canva": {
+    "episode_design": "DAHXWxLVlU0",
+    "edit_url": "https://www.canva.com/d/oNVMJ2IHUP0lzTC",
+    "master_design": "DAHXWMJz0OY",
+    "style_kit": "DAHXW4ID8t0"
+  },
+  "sources": "sources.md",
+  "attribution": "ATTRIBUTION.md",
+  "data": {
+    "header": "خمّن اللاعب من انتقالاته",
+    "canvaPages": { "dir": "canva", "cover": 1, "mystery": 2, "reveal": 3, "outro": 4 },
+    "hook": { "narration": "خمّن اللاعب من انتقالاته!" },
+    "stops": [
+      { "club": "دينامو زغرب", "years": "2003", "note": "أول عقد احترافي",
+        "narration": "وقّع أول عقد احترافي مع دينامو زغرب عام ألفين وثلاثة." },
+      { "club": "زرينيسكي موستار", "row": "زرينيسكي موستار (إعارة)", "years": "2003 – 2004", "note": "إعارة إلى البوسنة والهرسك",
+        "narration": "ثم أُعير إلى زرينيسكي موستار في البوسنة." },
+      { "club": "إنتر زابريشيتش", "row": "إنتر زابريشيتش (إعارة)", "years": "2004 – 2005", "note": "إعارة ثانية",
+        "narration": "وبعدها إعارة ثانية إلى إنتر زابريشيتش." },
+      { "club": "دينامو زغرب", "row": "دينامو زغرب (العودة)", "years": "2005 – 2008", "note": "العودة والتألق",
+        "narration": "ثم عاد إلى دينامو زغرب وتألق حتى ألفين وثمانية." },
+      { "club": "توتنهام", "years": "2008 – 2012", "note": "الانطلاقة في إنجلترا",
+        "narration": "ثم انتقل إلى توتنهام في إنجلترا." },
+      { "club": "ريال مدريد", "years": "2012 – 2025", "note": "١٣ موسمًا و٦ ألقاب لدوري الأبطال",
+        "narration": "وفي ألفين واثني عشر انضم إلى ريال مدريد، وبقي ثلاثة عشر عامًا." },
+      { "club": "إيه سي ميلان", "years": "2025 – الآن", "note": "عقده ممتد حتى 2027",
+        "narration": "واليوم يلعب مع إيه سي ميلان." }
+    ],
+    "answer": {
+      "name": "لوكا مودريتش",
+      "sub": "المايسترو الكرواتي",
+      "photo": "assets/modric_rm2021.jpg",
+      "photoPosition": "30% 30%",
+      "credit": "Photo: Real Madrid (YouTube), CC BY 3.0 (cropped)"
+    },
+    "reveal": { "narration": "إنه الكرواتي لوكا مودريتش!" },
+    "outro": { "narration": "هل عرفته؟ اكتب في التعليقات." }
+  }
+}

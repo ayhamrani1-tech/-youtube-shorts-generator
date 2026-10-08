@@ -1,0 +1,15 @@
+{
+  "_status": "PLANNED — not yet buildable",
+  "schema": "fvs/1", "type": "guess-attributes", "slug": "example-attributes",
+  "subject": { "name_ar": "…" }, "language": "ar", "orientation": "portrait", "width": 1080, "height": 1920, "fps": 30,
+  "targetSeconds": [30, 45], "voice": { "engine": "clipchamp", "status": "pending" },
+  "data": {
+    "clues": [
+      { "label": "الجنسية", "value": "…", "narration": "…" },
+      { "label": "النادي الحالي", "value": "…", "narration": "…" },
+      { "label": "رقم القميص", "value": "…", "narration": "…" },
+      { "label": "المركز", "value": "…", "narration": "…" }
+    ],
+    "answer": { "name": "…", "sub": "…", "photo": null, "credit": "" }
+  }
+}

@@ -1,0 +1,47 @@
+# FootballVideoStudio: what stays local (see docs/MEDIA.md for where each kind of file lives)
+
+# Downloaded tools and models: FFmpeg, eSpeak, Piper, uv/Python, PyTorch, SILMA and Whisper weights (~11 GB)
+tools/
+# Caches and generated build output (rebuilt by studio/build.mjs / render.mjs)
+build_cache/
+episodes/*/build/
+episodes/**/frames/
+episodes/**/check*/
+episodes/**/inspect/
+*.key
+*.sha1
+# Rendered videos (kept locally in out/, previous versions in out/archive/)
+out/
+# Audio: narration recordings, Clipchamp exports, generated TTS/draft clips
+*.wav
+*.m4a
+*.mp3
+*.aac
+*.ogg
+*.opus
+*.mp4
+*.mov
+*.webm
+incoming_audio/
+# Python
+__pycache__/
+*.pyc
+# OS / editor
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+# Secrets (none are used by this project; never commit them)
+.env
+*.pem
+*token*
+*secret*
+
+# Small files that ARE kept:
+# reference art needed to rebuild
+!templates/kit/*.png
+# the voice audition clips for listening on GitHub (~0.9 MB total)
+!docs/voice-audition/*.m4a
+
+# Your original bot.py contains a hard-coded Discord token: never commit it (see docs/AUDIT.md)
+/bot.py

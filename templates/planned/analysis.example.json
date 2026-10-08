@@ -1,0 +1,12 @@
+{
+  "_status": "PLANNED — needs comparison/stat-table layouts",
+  "schema": "fvs/1", "type": "analysis", "slug": "example-compare",
+  "language": "ar", "orientation": "landscape", "width": 1920, "height": 1080, "fps": 30, "targetSeconds": [120, 1200],
+  "voice": { "engine": "clipchamp", "status": "pending" },
+  "data": {
+    "compare": { "a": "…", "b": "…", "season": "…",
+      "stats": [ { "label": "الأهداف", "a": 0, "b": 0 }, { "label": "صناعة الأهداف", "a": 0, "b": 0 } ],
+      "sources": ["https://…"] },
+    "chapters": [ { "title": "…", "scenes": [] } ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "total": 46.5,
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "start": 0,
+      "dur": 4.5,
+      "narrDur": 2.493
+    },
+    {
+      "id": "c1",
+      "type": "clue",
+      "start": 4.5,
+      "dur": 4.5,
+      "narrDur": 3.474
+    },
+    {
+      "id": "c2",
+      "type": "clue",
+      "start": 9,
+      "dur": 4.5,
+      "narrDur": 2.06
+    },
+    {
+      "id": "c3",
+      "type": "clue",
+      "start": 13.5,
+      "dur": 5,
+      "narrDur": 4.193
+    },
+    {
+      "id": "c4",
+      "type": "clue",
+      "start": 18.5,
+      "dur": 4.5,
+      "narrDur": 2.591
+    },
+    {
+      "id": "c5",
+      "type": "clue",
+      "start": 23,
+      "dur": 4.5,
+      "narrDur": 2.047
+    },
+    {
+      "id": "c6",
+      "type": "clue",
+      "start": 27.5,
+      "dur": 4.5,
+      "narrDur": 2.554
+    },
+    {
+      "id": "n5",
+      "type": "count",
+      "start": 32,
+      "dur": 1,
+      "narrDur": 0
+    },
+    {
+      "id": "n4",
+      "type": "count",
+      "start": 33,
+      "dur": 1,
+      "narrDur": 0
+    },
+    {
+      "id": "n3",
+      "type": "count",
+      "start": 34,
+      "dur": 1,
+      "narrDur": 0
+    },
+    {
+      "id": "n2",
+      "type": "count",
+      "start": 35,
+      "dur": 1,
+      "narrDur": 0
+    },
+    {
+      "id": "n1",
+      "type": "count",
+      "start": 36,
+      "dur": 1,
+      "narrDur": 0
+    },
+    {
+      "id": "reveal",
+      "type": "reveal",
+      "start": 37,
+      "dur": 5.5,
+      "narrDur": 2.851
+    },
+    {
+      "id": "outro",
+      "type": "outro",
+      "start": 42.5,
+      "dur": 4,
+      "narrDur": 3.196
+    }
+  ]
+}

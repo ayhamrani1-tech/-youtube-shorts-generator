@@ -1,0 +1,11 @@
+{
+  "_status": "PLANNED — would reuse the working story engine; needs trophy layout + club colours",
+  "schema": "fvs/1", "type": "club-history", "slug": "example-club",
+  "language": "ar", "orientation": "landscape", "width": 1920, "height": 1080, "fps": 30, "targetSeconds": [180, 1200],
+  "voice": { "engine": "clipchamp", "status": "pending" },
+  "data": {
+    "intro": { "kicker": "تاريخ نادٍ", "title": "…", "subtitle": "…", "narration": "…" },
+    "chapters": [ { "title": "التأسيس", "narration": "…", "scenes": [ { "layout": "text", "year": "…", "heading": "…", "body": ["…"], "narration": "…" } ] } ],
+    "trophies": [ { "name": "…", "count": 0 } ]
+  }
+}

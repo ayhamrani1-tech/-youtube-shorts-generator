@@ -1,0 +1,49 @@
+{
+  "schema": "fvs/1",
+  "type": "guess-attributes",
+  "slug": "salah-attributes",
+  "subject": { "name_ar": "محمد صلاح", "name_en": "Mohamed Salah" },
+  "language": "ar",
+  "orientation": "portrait",
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "targetSeconds": [30, 50],
+  "voice": {
+    "engine": "clipchamp",
+    "status": "pending",
+    "auto": "silma",
+    "draft": "espeak",
+    "note": "Final narration = manual Clipchamp export (narration/SCRIPT.md) or SILMA once you approve the voice."
+  },
+  "canva": { "episode_design": null, "note": "All scenes are rendered locally from the master palette; no Canva page needed for this type." },
+  "sources": "sources.md",
+  "data": {
+    "header": "خمّن اللاعب من معلوماته",
+    "asOf": "المعلومات حسب موسم 2024/25",
+    "hook": {
+      "kicker": "تحدّي",
+      "title": "أربع معلومات… لاعب واحد",
+      "subtitle": "هل تعرفه قبل نهاية العدّ؟",
+      "narration": "أربع معلومات عن لاعب واحد. هل تعرفه قبل نهاية العد؟"
+    },
+    "attributes": [
+      { "label": "الجنسية", "value": "مصر", "narration": "المعلومة الأولى: جنسيته مصرية." },
+      { "label": "النادي", "value": "ليفربول", "narration": "الثانية: يلعب في ليفربول." },
+      { "label": "رقم القميص", "value": "11", "size": 140, "narration": "الثالثة: يرتدي القميص رقم أحد عشر." },
+      { "label": "المركز", "value": "جناح أيمن", "narration": "والرابعة: يلعب جناحًا أيمن." }
+    ],
+    "answer": {
+      "name": "محمد صلاح",
+      "sub": "ليفربول · مصر",
+      "detail": "هدّاف الدوري الإنجليزي موسم 2024/25 برصيد 29 هدفًا، وبطل الدوري مع ليفربول."
+    },
+    "reveal": { "narration": "إنه محمد صلاح! هدّاف الدوري الإنجليزي في موسم ألفين وأربعة وعشرين، بتسعة وعشرين هدفًا، وبطل الدوري مع ليفربول." },
+    "outro": {
+      "kicker": "دورك",
+      "title": "كم معلومة احتجت؟",
+      "subtitle": "اكتب رقمها في التعليقات",
+      "narration": "كم معلومة احتجت لتعرفه؟ اكتب رقمها في التعليقات."
+    }
+  }
+}

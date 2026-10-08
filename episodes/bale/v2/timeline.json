@@ -1,0 +1,155 @@
+{
+  "total": 44.763,
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "start": 0,
+      "dur": 3.5,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 0.2,
+      "narrDur": 2.493
+    },
+    {
+      "id": "c1",
+      "type": "clue",
+      "start": 3.5,
+      "dur": 4.374,
+      "enter": "slideleft",
+      "enterDur": 0.5,
+      "narrStart": 4.05,
+      "narrDur": 3.474
+    },
+    {
+      "id": "c2",
+      "type": "clue",
+      "start": 7.874,
+      "dur": 4.3,
+      "enter": "wipeleft",
+      "enterDur": 0.5,
+      "narrStart": 8.424,
+      "narrDur": 2.06
+    },
+    {
+      "id": "c3",
+      "type": "clue",
+      "start": 12.174,
+      "dur": 5.093,
+      "enter": "wipeleft",
+      "enterDur": 0.5,
+      "narrStart": 12.724,
+      "narrDur": 4.193
+    },
+    {
+      "id": "c4",
+      "type": "clue",
+      "start": 17.267,
+      "dur": 4.3,
+      "enter": "wipeleft",
+      "enterDur": 0.5,
+      "narrStart": 17.817,
+      "narrDur": 2.591
+    },
+    {
+      "id": "c5",
+      "type": "clue",
+      "start": 21.567,
+      "dur": 4.3,
+      "enter": "wipeleft",
+      "enterDur": 0.5,
+      "narrStart": 22.117,
+      "narrDur": 2.047
+    },
+    {
+      "id": "c6",
+      "type": "clue",
+      "start": 25.867,
+      "dur": 4.3,
+      "enter": "wipeleft",
+      "enterDur": 0.5,
+      "narrStart": 26.417,
+      "narrDur": 3.08
+    },
+    {
+      "id": "n5",
+      "type": "count",
+      "start": 30.167,
+      "dur": 1,
+      "enter": "wipeup",
+      "enterDur": 0.4,
+      "narrStart": 30.617,
+      "narrDur": 0
+    },
+    {
+      "id": "n4",
+      "type": "count",
+      "start": 31.167,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 31.367,
+      "narrDur": 0
+    },
+    {
+      "id": "n3",
+      "type": "count",
+      "start": 32.167,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 32.367,
+      "narrDur": 0
+    },
+    {
+      "id": "n2",
+      "type": "count",
+      "start": 33.167,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 33.367,
+      "narrDur": 0
+    },
+    {
+      "id": "n1",
+      "type": "count",
+      "start": 34.167,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 34.367,
+      "narrDur": 0
+    },
+    {
+      "id": "mystery",
+      "type": "mystery",
+      "start": 35.167,
+      "dur": 0.9,
+      "enter": "fadewhite",
+      "enterDur": 0.3,
+      "narrStart": 35.517,
+      "narrDur": 0
+    },
+    {
+      "id": "reveal",
+      "type": "reveal",
+      "start": 36.067,
+      "dur": 4.6,
+      "enter": "circleopen",
+      "enterDur": 0.5,
+      "narrStart": 36.617,
+      "narrDur": 2.851
+    },
+    {
+      "id": "outro",
+      "type": "outro",
+      "start": 40.667,
+      "dur": 4.096,
+      "enter": "slideup",
+      "enterDur": 0.5,
+      "narrStart": 41.217,
+      "narrDur": 3.196
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "_note": "status: 'working' = expander + layouts implemented AND a sample episode rendered and passed studio/verify.mjs + studio/textcheck.mjs. Narration in every sample is the unapproved SILMA voice (or eSpeak draft) — samples are previews until you approve a voice or import Clipchamp audio.",
+  "canva": {
+    "master_portrait": { "id": "DAHXWMJz0OY", "edit_url": "https://www.canva.com/d/FzYFSpcEXwrh7y7", "role": "master transfer-history design (15 pages). Copy it per episode — never edit it in place." },
+    "style_kit_portrait": { "id": "DAHXW4ID8t0", "edit_url": "https://www.canva.com/d/BEQl_Usw6USqFSg", "role": "clean backgrounds exported to templates/kit/*.png for locally rendered scenes" },
+    "modric_episode": { "id": "DAHXWxLVlU0", "edit_url": "https://www.canva.com/d/oNVMJ2IHUP0lzTC", "role": "copy of master pages for episodes/modric" },
+    "story_thumbnail": { "id": "DAHXWz8LU_o", "edit_url": "https://www.canva.com/d/8NX1LYG9TnSBmAW", "role": "landscape YouTube thumbnail (1280×720) — copy for each long-form episode" },
+    "v1_original": { "id": "DAHXV3JkknM", "role": "first Bale design (preserved, not used for new episodes)" }
+  },
+  "types": {
+    "transfer-history": {
+      "status": "working", "title_ar": "خمّن اللاعب من انتقالاته", "orientation": "portrait", "size": [1080, 1920], "typicalSeconds": [35, 60],
+      "data": "stops[2–9] {club,row?,card?,years,note,narration}, answer {name,sub,photo?,credit}, hook/reveal/outro narration, canvaPages {dir,cover,mystery,reveal,outro}",
+      "scenes": "hook(canva) → clue×N(html) → countdown 5→1 → mystery(canva) → reveal(html photo or canva) → outro(canva)",
+      "tested_with": ["episodes/modric (7 stops, 54.1 s)"]
+    },
+    "guess-attributes": {
+      "status": "working", "title_ar": "خمّن اللاعب من الجنسية والنادي والرقم والمركز", "orientation": "portrait", "size": [1080, 1920], "typicalSeconds": [30, 50],
+      "data": "asOf (reference season — required, shown on screen), header, hook {kicker,title,subtitle,narration}, attributes[2–8] {label,value,size?,narration}, answer {name,sub,detail}, reveal/outro",
+      "scenes": "hook → attribute×N → countdown 5→1 → reveal (name card) → outro — all HTML, no Canva page needed",
+      "tested_with": ["episodes/salah-attributes (4 attributes, season 2024/25)"]
+    },
+    "who-scored": {
+      "status": "working", "title_ar": "من سجّل الهدف؟", "orientation": "portrait", "size": [1080, 1920], "typicalSeconds": [40, 65],
+      "data": "match {competition,home,away,score,date,venue,minute}, recreation {label (required: states it is a recreation), path[[x,y]…] in pitch units, players[{x,y,team,label}], moveSeconds}, hints[] {text,short,narration}, answer, reveal/outro",
+      "scenes": "match card → tactical recreation (moving scorer '؟' + ball on a drawn pitch) → hints → countdown → reveal → outro. No match footage (copyrighted).",
+      "tested_with": ["episodes/who-scored-maradona-1986"]
+    },
+    "story": {
+      "status": "working", "title_ar": "قصص وسير اللاعبين / وثائقيات", "orientation": "landscape", "size": [1920, 1080], "typicalSeconds": [90, 1200],
+      "data": "intro, chapters[{title,subtitle,narration,scenes[{layout: text|fact|timeline|trophies|compare|formation|quote, ...}]}], end",
+      "tested_with": ["episodes/modric-story (2-min sample)", "episodes/mbappe-story", "episodes/bale-story", "episodes/maradona-story", "episodes/ucl-2019"],
+      "full_length": "not produced — full-length outlines in episodes/*/narration/FULL_OUTLINE.md; render only after the 2-minute sample is approved"
+    },
+    "club-history": {
+      "status": "working", "title_ar": "تاريخ الأندية", "orientation": "landscape", "size": [1920, 1080],
+      "data": "story structure + subject.club_ar (required); trophies layout for honours",
+      "tested_with": ["episodes/milan-berlusconi"]
+    },
+    "analysis": {
+      "status": "working", "title_ar": "تحليل ومقارنات", "orientation": "landscape", "size": [1920, 1080],
+      "data": "story structure + data.criteria[] (required, shown and narrated) + at least one compare or formation scene",
+      "tested_with": ["episodes/pep-city-analysis"]
+    }
+  }
+}

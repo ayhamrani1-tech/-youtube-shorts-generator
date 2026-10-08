@@ -1,0 +1,155 @@
+{
+  "total": 43.98,
+  "scenes": [
+    {
+      "id": "hook",
+      "type": "hook",
+      "start": 0,
+      "dur": 3.5,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 0.2,
+      "narrDur": 2
+    },
+    {
+      "id": "c1",
+      "type": "clue",
+      "start": 3.5,
+      "dur": 4.54,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 4.05,
+      "narrDur": 3.64
+    },
+    {
+      "id": "c2",
+      "type": "clue",
+      "start": 8.04,
+      "dur": 4.3,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 8.59,
+      "narrDur": 1.76
+    },
+    {
+      "id": "c3",
+      "type": "clue",
+      "start": 12.34,
+      "dur": 4.5,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 12.89,
+      "narrDur": 3.6
+    },
+    {
+      "id": "c4",
+      "type": "clue",
+      "start": 16.84,
+      "dur": 4.3,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 17.39,
+      "narrDur": 2.06
+    },
+    {
+      "id": "c5",
+      "type": "clue",
+      "start": 21.14,
+      "dur": 4.3,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 21.69,
+      "narrDur": 1.68
+    },
+    {
+      "id": "c6",
+      "type": "clue",
+      "start": 25.44,
+      "dur": 4.3,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 25.99,
+      "narrDur": 2.81
+    },
+    {
+      "id": "n5",
+      "type": "count",
+      "start": 29.74,
+      "dur": 1,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 29.94,
+      "narrDur": 0
+    },
+    {
+      "id": "n4",
+      "type": "count",
+      "start": 30.74,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 30.94,
+      "narrDur": 0
+    },
+    {
+      "id": "n3",
+      "type": "count",
+      "start": 31.74,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 31.94,
+      "narrDur": 0
+    },
+    {
+      "id": "n2",
+      "type": "count",
+      "start": 32.74,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 32.94,
+      "narrDur": 0
+    },
+    {
+      "id": "n1",
+      "type": "count",
+      "start": 33.74,
+      "dur": 1,
+      "enter": null,
+      "enterDur": 0,
+      "narrStart": 33.94,
+      "narrDur": 0
+    },
+    {
+      "id": "mystery",
+      "type": "mystery",
+      "start": 34.74,
+      "dur": 0.9,
+      "enter": "fadewhite",
+      "enterDur": 0.3,
+      "narrStart": 35.09,
+      "narrDur": 0
+    },
+    {
+      "id": "reveal",
+      "type": "reveal",
+      "start": 35.64,
+      "dur": 4.6,
+      "enter": "fadewhite",
+      "enterDur": 0.3,
+      "narrStart": 36.19,
+      "narrDur": 2.4
+    },
+    {
+      "id": "outro",
+      "type": "outro",
+      "start": 40.24,
+      "dur": 3.74,
+      "enter": "cut",
+      "enterDur": 0,
+      "narrStart": 40.79,
+      "narrDur": 2.84
+    }
+  ]
+}
