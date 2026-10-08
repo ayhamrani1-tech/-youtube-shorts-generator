@@ -41,6 +41,7 @@ def research_quiz(name: str, quiz: str, qid: str | None = None) -> ResearchResul
             box = wikipedia.get_infobox(facts.enwiki) if facts.enwiki else None
         except ResearchError:
             box = None
+        wikidata.add_infobox_only_clubs(facts, box)   # e.g. a spell Wikidata lacks — kept, marked single-source
         if quiz == "story":
             intro = wikipedia.get_intro(facts.enwiki) if facts.enwiki else ""
             draft = builder.story_draft(facts, box, intro)

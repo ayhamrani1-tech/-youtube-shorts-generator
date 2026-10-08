@@ -135,8 +135,26 @@ function analysis(ep, dir) {
   return story(ep, dir);
 }
 
+// Top list (countdown 5→1 of records). Worked example in docs/TUTORIAL_TEMPLATES.md: a new type built only from
+// shared pieces — the landscape `title`, `fact` and `end` layouts and the standard `reveal` entrance.
+function topList(ep, dir) {
+  const d = ep.data, items = d.items;
+  if (items.length < 3 || items.length > 10) throw new Error(`top-list supports 3–10 items (got ${items.length})`);
+  const ar = (n) => String(n).replace(/\d/g, (x) => '٠١٢٣٤٥٦٧٨٩'[x]);
+  const S = [{ id: 'intro', chapter: 'intro', source: 'html', layout: 'title', ...d.intro, seconds: d.intro.seconds ?? 5,
+    entrance: { type: 'reveal', d: 0.6 }, sfx: ['whoosh'] }];
+  items.forEach((it, i) => {
+    const rank = items.length - i;                       // shown as a countdown: 5, 4, 3, 2, 1
+    S.push({ id: `r${rank}`, chapter: 'list', source: 'html', layout: 'fact', chapterLabel: `المركز ${ar(rank)}`,
+      value: it.value, label: it.label, note: it.note, seconds: it.seconds ?? 6, entrance: { type: 'reveal', d: 0.5 },
+      sfx: [rank === 1 ? 'chime' : 'whoosh'], narration: it.narration });
+  });
+  S.push({ id: 'end', chapter: 'end', source: 'html', layout: 'end', ...d.end, seconds: d.end.seconds ?? 5, entrance: { type: 'reveal', d: 0.5 } });
+  return S;
+}
+
 export const TEMPLATES = { 'transfer-history': transferHistory, 'guess-attributes': guessAttributes, 'who-scored': whoScored,
-  story, 'club-history': clubHistory, analysis };
+  story, 'club-history': clubHistory, analysis, 'top-list': topList };
 
 export function expand(ep, dir) {
   const fn = TEMPLATES[ep.type];

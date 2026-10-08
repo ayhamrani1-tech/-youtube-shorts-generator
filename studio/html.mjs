@@ -282,7 +282,7 @@ ${it.map((t, i) => {
 <div class="abs b c fit anim" style="left:${x + 20}px;top:${y + ch * 0.58}px;width:${cw - 40}px;font-size:${Math.round(ch * 0.15)}px">${bdi(t.label)}</div>
 ${t.note ? `<div class="abs b c fit anim" style="left:${x + 20}px;top:${y + ch * 0.79}px;width:${cw - 40}px;font-size:${Math.round(ch * 0.09)}px;color:${C.gold}">${bdi(t.note)}</div>` : ''}`);
     }).join('\n')}
-${sc.source ? `<div class="abs c" style="left:200px;width:1520px;top:950px;font-size:26px;color:#B8C4DA">${bdi(sc.source)}</div>` : ''}`;
+${sc.source ? `<div class="abs c" style="left:200px;width:1520px;top:902px;font-size:26px;color:#B8C4DA">${bdi(sc.source)}</div>` : ''}`;
   },
   // Comparison on explicit criteria: a/b {name}, rows [{label, a, b, unit?, better:'high'|'low'}].
   compare(sc) {
@@ -299,7 +299,7 @@ ${bar(r.a, max, C.lime, y + rh * 0.08, h)}${bar(r.b, max, C.gold, y + rh * 0.08 
 <div class="abs b anim" style="left:${250 + Math.round(980 * r.a / max)}px;top:${y + rh * 0.08}px;height:${h}px;line-height:${h}px;font-size:${Math.round(h * 0.8)}px;color:${C.lime}" dir="ltr">${esc(r.a)}${esc(r.unit ?? '')}</div>
 <div class="abs b anim" style="left:${250 + Math.round(980 * r.b / max)}px;top:${y + rh * 0.08 + h + 8}px;height:${h}px;line-height:${h}px;font-size:${Math.round(h * 0.8)}px;color:${C.gold}" dir="ltr">${esc(r.b)}${esc(r.unit ?? '')}</div>`);
     }).join('\n')}
-${sc.source ? `<div class="abs c" style="left:200px;width:1520px;top:955px;font-size:26px;color:#B8C4DA">${bdi(sc.source)}</div>` : ''}`;
+${sc.source ? `<div class="abs c" style="left:200px;width:1520px;top:902px;font-size:26px;color:#B8C4DA">${bdi(sc.source)}</div>` : ''}`;
   },
   // Formation / tactical board, horizontal pitch (x 0–105 left→right attacking, y 0–68). players [{x,y,label}], arrows [[x1,y1,x2,y2]].
   formation(sc) {
@@ -316,7 +316,7 @@ ${p.label ? `<text x="${p.x * s}" y="${p.y * s + 56}" text-anchor="middle" font-
 ${A}${P}</svg>
 <div class="abs b anim" style="right:110px;top:220px;width:560px;font-size:60px;line-height:1.25;text-align:right">${bdi(sc.heading)}</div>
 <div class="abs anim fitbox" style="right:110px;top:${sc.heading.length > 18 ? 400 : 330}px;width:560px;height:${sc.heading.length > 18 ? 530 : 600}px;font-size:40px;line-height:1.55;text-align:right;color:#DCE6F5">${(sc.body || []).map((p) => `<p style="margin-bottom:14px">${bdi(p)}</p>`).join('')}</div>
-${sc.label ? `<div class="abs c" style="left:${L0}px;width:${W}px;top:${T0 + H + 20}px;font-size:28px;color:${C.lime}">${bdi(sc.label)}</div>` : ''}`;
+${sc.label ? `<div class="abs c" style="left:${L0}px;width:${W}px;top:${T0 + H + 10}px;font-size:26px;color:${C.lime}">${bdi(sc.label)}</div>` : ''}`;
   },
   // Quote card: text + attribution.
   quote(sc) {

@@ -5,7 +5,7 @@ What it extracts for a player:
   * nationality for sport (P1532, falling back to citizenship P27)
   * positions (P413)
   * club spells (P54) with start/end years, loans (P1642 = Q2914547) and shirt numbers (P1618)
-National and youth teams are removed: a spell is kept only if the team is an association football club (Q476028).
+National and youth teams are removed: a spell is kept only if the team is a football club (see is_club).
 
 Every result carries the entity URLs it came from and the retrieval date, so it can be written into sources.md.
 """
@@ -19,6 +19,14 @@ from .http import ResearchError, fetch_json
 API = "https://www.wikidata.org/w/api.php"
 FOOTBALLER = "Q937857"   # occupation: association football player
 CLUB = "Q476028"         # instance of: association football club
+CLUB_TYPES = {CLUB, "Q103229495"}   # + "men's association football team" (e.g. Chelsea F.C. has only this one)
+NATIONAL_TYPES = {"Q6979593", "Q135408445", "Q23901123", "Q23901137", "Q6979740"}  # national / youth national teams
+
+
+def is_club(entity: dict) -> bool:
+    types = set(_item_ids(entity.get("claims", {}), "P31"))
+    name = _label(entity, "en").lower()
+    return bool(types & CLUB_TYPES) and not (types & NATIONAL_TYPES) and "national" not in name
 LOAN = "Q2914547"        # acquisition transaction: loan
 
 
@@ -40,6 +48,7 @@ class ClubSpell:
     shirt: str | None = None
     enwiki: str | None = None      # English Wikipedia title, used for cross-checking
     preferred: bool = False
+    source: str = "wikidata"       # "wikipedia" = added from the infobox because Wikidata lacks it (single source)
 
 
 @dataclass
@@ -139,7 +148,7 @@ def get_player(qid: str, fetch=fetch_json) -> PlayerFacts:
         tid = c["mainsnak"]["datavalue"]["value"]["id"]
         team = others.get(tid, {})
         name_en, name_ar = _label(team, "en"), _label(team, "ar")
-        if CLUB not in _item_ids(team.get("claims", {}), "P31"):
+        if not is_club(team):
             excluded.append(name_en or tid)
             continue
         q = c.get("qualifiers", {})
@@ -157,3 +166,32 @@ def get_player(qid: str, fetch=fetch_json) -> PlayerFacts:
         positions_ar=[_label(others.get(p, {}), "ar") for p in pos_ids if _label(others.get(p, {}), "ar")],
         positions_en=[_label(others.get(p, {}), "en") for p in pos_ids],
         spells=spells, enwiki=e.get("sitelinks", {}).get("enwiki", {}).get("title"), excluded=sorted(set(excluded)))
+
+
+def add_infobox_only_clubs(facts: PlayerFacts, box, fetch=fetch_json) -> list[ClubSpell]:
+    """Clubs listed in the Wikipedia infobox but missing on Wikidata (e.g. De Bruyne's Chelsea spell).
+    They are added as single-source spells; their Arabic names come from Wikidata via the English article title."""
+    if not box:
+        return []
+    known = {s.enwiki for s in facts.spells if s.enwiki}
+    missing = [c for c in box.clubs if c.title not in known and not any(
+        s.name_en.lower().startswith(c.shown.replace(" (loan)", "").lower()) for s in facts.spells)]
+    if not missing:
+        return []
+    titles = sorted({c.title for c in missing})
+    data = fetch(API, {"action": "wbgetentities", "sites": "enwiki", "titles": "|".join(titles[:50]), "props": "labels|sitelinks|claims", "languages": "ar|en"})
+    by_title = {}
+    for qid, e in data.get("entities", {}).items():
+        t = e.get("sitelinks", {}).get("enwiki", {}).get("title")
+        if t and is_club(e):
+            by_title[t] = (qid, _label(e, "ar"), _label(e, "en"))
+    added = []
+    for c in missing:
+        if c.title not in by_title:
+            continue  # not a club (or unknown): leave it as a warning only
+        qid, ar, en = by_title[c.title]
+        spell = ClubSpell(qid, ar, en or c.shown, c.start, c.end, c.loan, None, c.title, False, "wikipedia")
+        facts.spells.append(spell)
+        added.append(spell)
+    facts.spells.sort(key=lambda s: (s.start or 9999, s.loan))
+    return added

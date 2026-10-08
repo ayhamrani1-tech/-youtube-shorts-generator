@@ -38,12 +38,14 @@ const holds = tl.scenes.filter((s) => ['clue', 'attr', 'hint', 'text', 'fact', '
 const short = holds.filter((s) => s.dur - Math.max(s.settle, 0.5) < 3.0);
 if (holds.length) checks.push(['text holds still ≥3s after entrance', short.length === 0, short.length ? short.map((s) => s.id).join(',') : `${holds.length} scenes`]);
 
+// regions compared: the whole frame, minus moving sprites (psnrCrop) and the caption band (checked separately below)
+const cropFor = (s) => { const c = s.psnrCrop ?? (s.capBand ? [0, 0, ep.width, s.capBand.y] : null); return c ? `,crop=${c[2]}:${c[3]}:${c[0]}:${c[1]}` : ''; };
 // settled frame vs source PNG
 const out = ensureDir(p.check), bad = [];
 for (const s of tl.scenes) {
   const at = Math.min(s.start + s.dur - 0.05, s.start + Math.max(s.settle, s.entrance === 'push' ? 0 : 0.7) + 0.05);
   // scenes with moving sprites compare only their static text region (psnrCrop = [x,y,w,h])
-  const crop = s.psnrCrop ? `,crop=${s.psnrCrop[2]}:${s.psnrCrop[3]}:${s.psnrCrop[0]}:${s.psnrCrop[1]}` : '';
+  const crop = cropFor(s);
   const r = spawnSync(FFMPEG, ['-hide_banner', '-ss', at.toFixed(3), '-i', mp4, '-i', s.frame, '-frames:v', '1', '-lavfi',
     `[0:v]format=yuv420p${crop}[x];[1:v]scale=${ep.width}:${ep.height},format=yuv420p${crop}[y];[x][y]psnr`, '-f', 'null', '-'], { encoding: 'utf8' }).stderr;
   const ps = parseFloat(r.match(/average:([\d.]+|inf)/)?.[1] ?? '0');
@@ -62,11 +64,11 @@ for (const s of trans) {
   const at = (Math.round(s.start * fps) + n) / fps - 0.0005, norm = `fps=${fps},scale=${ep.width}:${ep.height},format=yuv420p,setsar=1`;
   const ins = s.entrance === 'flash' ? ['-loop', '1', '-framerate', String(fps), '-t', '1', '-i', s.frame]
     : ['-loop', '1', '-framerate', String(fps), '-t', String(d + 0.1), '-i', s.baseFrame, '-loop', '1', '-framerate', String(fps), '-t', '1', '-i', s.stepFrames?.[0] ?? s.frame];
-  const pick = `select=eq(n\\,${n}),setpts=PTS-STARTPTS[e]`;
+  const pick = `select=eq(n\\,${n}),setpts=PTS-STARTPTS${cropFor(s)}[e]`;
   const ref = s.entrance === 'flash' ? `[1:v]${norm},fade=t=in:st=0:d=${d}:color=white,${pick}`
     : `[1:v]${norm}[vb];[2:v]${norm}[vf];[vb][vf]xfade=transition=fade:duration=${d}:offset=0,${pick}`;
   const r = spawnSync(FFMPEG, ['-hide_banner', '-ss', at.toFixed(4), '-i', mp4, ...ins, '-frames:v', '1', '-lavfi',
-    `${ref};[0:v]format=yuv420p,setpts=PTS-STARTPTS[x];[x][e]psnr`, '-f', 'null', '-'], { encoding: 'utf8' }).stderr;
+    `${ref};[0:v]format=yuv420p${cropFor(s)},setpts=PTS-STARTPTS[x];[x][e]psnr`, '-f', 'null', '-'], { encoding: 'utf8' }).stderr;
   const ps = parseFloat(r.match(/average:([\d.]+|inf)/)?.[1] ?? '0'); tmin = Math.min(tmin, ps);
   if (ps < 30) tbad.push(`${s.id}:${ps.toFixed(1)}`);
   execFileSync(FFMPEG, ['-y', '-v', 'error', '-ss', at.toFixed(4), '-i', mp4, '-frames:v', '1', '-vf', `scale=${Math.round(ep.width / 3)}:-1`, join(out, `${s.id}.mid.jpg`)]);
@@ -78,13 +80,33 @@ for (const s of tl.scenes.filter((x) => x.stepTimes?.length)) {
     const norm = `fps=${fps},scale=${ep.width}:${ep.height},format=yuv420p,setsar=1`;
     const r = spawnSync(FFMPEG, ['-hide_banner', '-ss', at.toFixed(4), '-i', mp4, '-loop', '1', '-framerate', String(fps), '-t', '1', '-i', s.stepFrames[i],
       '-loop', '1', '-framerate', String(fps), '-t', '1', '-i', s.stepFrames[i + 1], '-frames:v', '1', '-lavfi',
-      `[1:v]${norm}[a];[2:v]${norm}[b];[a][b]xfade=transition=fade:duration=0.4:offset=0,select=eq(n\\,${n}),setpts=PTS-STARTPTS[e];[0:v]format=yuv420p,setpts=PTS-STARTPTS[x];[x][e]psnr`,
+      `[1:v]${norm}[a];[2:v]${norm}[b];[a][b]xfade=transition=fade:duration=0.4:offset=0,select=eq(n\\,${n}),setpts=PTS-STARTPTS${cropFor(s)}[e];[0:v]format=yuv420p${cropFor(s)},setpts=PTS-STARTPTS[x];[x][e]psnr`,
       '-f', 'null', '-'], { encoding: 'utf8' }).stderr;
     const ps = parseFloat(r.match(/average:([\d.]+|inf)/)?.[1] ?? '0'); trans.push(s); tmin = Math.min(tmin, ps);
     if (ps < 30) tbad.push(`${s.id}/item${i + 2}:${ps.toFixed(1)}`);
   });
 }
 if (trans.length) checks.push(['mid-transition frames = blend of the scene\'s own layers (PSNR ≥ 30 dB)', tbad.length === 0, tbad.length ? tbad.join(' ') : `${trans.length} transitions, min ${tmin.toFixed(1)} dB`]);
+
+// captions: at sampled word times the caption band must show exactly that word's strip over the scene's own frame
+const capScenes = tl.scenes.filter((s) => s.capEvents?.length);
+if (capScenes.length) {
+  const cbad = []; let cmin = Infinity, n = 0;
+  for (const s of capScenes) {
+    const B = s.capBand, evs = s.capEvents, sample = [evs[0], evs[evs.length >> 1], evs.at(-1)];
+    for (const e of sample) {
+      const at = (Math.round((s.narrStart + (e.s + e.e) / 2) * ep.fps)) / ep.fps;   // narrStart = scene start + narration lead
+      if (at >= s.start + s.dur - 0.05) continue;
+      const bg = s.stepFrames?.length ? s.stepFrames[(s.stepTimes ?? []).filter((x) => x <= at - s.start).length] : s.frame;
+      const r = spawnSync(FFMPEG, ['-hide_banner', '-ss', at.toFixed(4), '-i', mp4, '-i', bg, '-i', s.capSheet, '-frames:v', '1', '-lavfi',
+        `[1:v]scale=${ep.width}:${ep.height},crop=${ep.width}:${B.h}:0:${B.y},format=rgba[bgb];[2:v]format=rgba,crop=${ep.width}:${B.h}:0:${e.row * B.h}[st];[bgb][st]overlay=0:0,format=yuv420p[e];`
+        + `[0:v]crop=${ep.width}:${B.h}:0:${B.y},format=yuv420p[x];[x][e]psnr`, '-f', 'null', '-'], { encoding: 'utf8' }).stderr;
+      const ps = parseFloat(r.match(/average:([\d.]+|inf)/)?.[1] ?? '0'); cmin = Math.min(cmin, ps); n++;
+      if (ps < 30) cbad.push(`${s.id}@${(at - s.start).toFixed(2)}s:${ps.toFixed(1)}`);
+    }
+  }
+  checks.push(['captions show the spoken word at the right time (sampled, PSNR ≥ 30 dB)', cbad.length === 0, cbad.length ? cbad.slice(0, 6).join(' ') : `${n} samples in ${capScenes.length} scenes, min ${cmin.toFixed(1)} dB`]);
+}
 writeJSON(join(dir, "build", "verify.json"), { mp4, duration: +dur.toFixed(3), width: v?.width, height: v?.height, narration: srcs, checks: checks.map(([name, ok, info]) => ({ name, ok, info })) });
 for (const [name, ok, info] of checks) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}  (${info})`);
 console.log(`Check frames: ${out}`);

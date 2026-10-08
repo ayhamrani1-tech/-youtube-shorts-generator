@@ -42,6 +42,7 @@ function finish() {
 stage('build', 5, 'build.mjs');
 stage('textcheck', 15, 'textcheck.mjs');
 if (voice === 'tts') stage('narration', 25, 'narration.mjs', { pre: ['tts'] });
+stage('captions', 45, 'captions.mjs', { essential: false });   // word-by-word subtitles (if enabled for the episode)
 if (args.includes('--skip-render')) { report.status = 'ok'; report.warnings.push('render skipped (preview of frames only)'); finish(); }
 stage('render', 60, 'render.mjs');
 const v = stage('verify', 90, 'verify.mjs', { essential: false });

@@ -1,56 +1,74 @@
 # FootballVideoStudio
 
-Arabic football videos built from free local tools (FFmpeg, headless Edge, SILMA TTS, faster-whisper) and Canva designs.
-- **Arabic operating guide:** [docs/دليل_التشغيل.md](docs/دليل_التشغيل.md)
-- **Status of every requested video:** [docs/VERIFICATION.md](docs/VERIFICATION.md)
+Arabic football videos (Shorts 9:16 and YouTube 16:9), made by a local engine and controlled from Discord.
+Free tools only: FFmpeg, Microsoft Edge, Node.js, Python, Wikidata/Wikipedia, SILMA TTS, faster-whisper. **No paid APIs.**
 
-## Video types (all six have a working template and a verified sample)
-| Type | Size | Sample episode |
-|---|---|---|
-| `transfer-history`: guess the player from his transfers (2–9 clubs) | 1080×1920 | `episodes/modric` |
-| `guess-attributes`: nationality, club, number, position, with a stated reference season | 1080×1920 | `episodes/salah-attributes` |
-| `who-scored`: match card + labelled tactical recreation (no footage) + hints | 1080×1920 | `episodes/who-scored-maradona-1986` |
-| `story`: biographies and documentaries, chapters, up to ~20 min | 1920×1080 | `episodes/modric-story` (2-min test), `mbappe-story`, `bale-story`, `maradona-story`, `ucl-2019` |
-| `club-history` | 1920×1080 | `episodes/milan-berlusconi` |
-| `analysis` (explicit criteria, compare and formation scenes) | 1920×1080 | `episodes/pep-city-analysis` |
+```
+/guess_player name:"Luka Modric" quiz:Transfers
+   → facts from Wikidata + Wikipedia, each marked verified / single-source / disputed
+   → plan card in Discord → [Approve & render]
+   → narration (local voice) → captions → render → automatic checks → video posted in the channel
+```
 
-All samples use the **unapproved** SILMA voice. They are previews until you approve the voice or import Clipchamp narration. Full-length (15–20 min) episodes are planned in `episodes/*/narration/FULL_OUTLINE.md` and have not been rendered.
+## Start here
+| I want to… | Read |
+|---|---|
+| install and run it on Windows | [docs/SETUP_WINDOWS.md](docs/SETUP_WINDOWS.md) |
+| understand every module (and change it safely) | [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) |
+| create or modify templates myself | [docs/TUTORIAL_TEMPLATES.md](docs/TUTORIAL_TEMPLATES.md) |
+| know what works and what is missing | [docs/LIMITATIONS.md](docs/LIMITATIONS.md) · [docs/AUDIT.md](docs/AUDIT.md) |
+| keep the bot running | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| Arabic operating guide | [docs/دليل_التشغيل.md](docs/دليل_التشغيل.md) |
+| QA evidence | [docs/VERIFICATION.md](docs/VERIFICATION.md) · [docs/ARABIC_TEXT_AUDIT.md](docs/ARABIC_TEXT_AUDIT.md) · [docs/voice-audition/](docs/voice-audition/README.md) |
 
-## Pipeline (each command tested on this machine)
-```bash
-node studio/build.mjs episodes/modric
+## Quick start (Windows PowerShell, in this folder)
+```powershell
+py -m venv .venv
 ```
-```bash
-node studio/textcheck.mjs episodes/modric
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
-```bash
-node studio/narration.mjs script episodes/modric
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
 ```
-```bash
-node studio/narration.mjs tts episodes/modric
+```powershell
+.\.venv\Scripts\python.exe -m bot.cli research "Luka Modric" --quiz transfers
 ```
-```bash
-node studio/narration.mjs import episodes/modric
+```powershell
+.\.venv\Scripts\python.exe -m bot.cli render luka-modric-transfers
 ```
-```bash
-node studio/render.mjs episodes/modric
+```powershell
+Copy-Item .env.example .env
 ```
-```bash
-node studio/verify.mjs episodes/modric
+```powershell
+.\.venv\Scripts\python.exe -m bot.main
 ```
-```bash
-node studio/ocrcheck.mjs episodes/modric
-```
-- **`build`**: template → scenes → PNG frames (Edge shapes the Arabic).
-- **`textcheck`**: overflow, cropping, overlap, missing letters, bad characters.
-- **`script`**: writes `narration/SCRIPT.md` for Clipchamp.
-- **`tts`**: SILMA local voice, plus a speech-recognition check of every line in `audio/tts_report.md`.
-- **`import`**: Clipchamp files. A single full recording is split at sentence boundaries confirmed against the script with speech recognition.
-- **`render`**: scenes stretch to the narration and speech is never sped up. Multi-item scenes reveal items as they are narrated.
-- **`verify`**: streams, duration, sync, countdown/reveal. Settled and mid-transition frames are compared with their own sources.
-- **`ocrcheck`**: Windows Arabic OCR as supporting evidence.
+- **Tests:** the pytest step runs 28 offline tests (no network, no Discord).
+- **CLI research and render:** a local video without Discord, written to `out\luka-modric-transfers.mp4`.
+- **`.env`:** put your **new** bot token in it before starting the bot.
 
-Narration priority when rendering: `audio/final` (Clipchamp) › `audio/tts` (SILMA) › `audio/draft` (eSpeak) › silence.
+## Templates (engine types)
+| Type | Size | Example episode | From a name in Discord |
+|---|---|---|---|
+| `transfer-history`: guess the player from transfers | 1080×1920 | `modric`, `luka-modric-transfers` | ✅ automatic |
+| `guess-attributes`: nationality / club / number / position | 1080×1920 | `salah-attributes` | ✅ automatic |
+| `who-scored`: labelled tactical recreation + hints | 1080×1920 | `who-scored-maradona-1986` | written by hand |
+| `story`: biographies and documentaries (up to ~20 min) | 1920×1080 | `mbappe-story`, `bale-story`, `maradona-story`, `ucl-greatest-debate` | skeleton + research pack |
+| `club-history` | 1920×1080 | `milan-berlusconi` | written by hand |
+| `analysis`: explicit comparison criteria | 1920×1080 | `chelsea-mourinho-analysis` | written by hand |
+| `top-list`: countdown of records (tutorial example) | 1920×1080 | `records-top5` | written by hand |
+
+All rendered videos so far are **previews**: the automatic voice is not yet approved by you.
+
+## Discord commands
+`/guess_player` · `/player_story` · `/goal_quiz` · `/create_video` · `/preview` · `/templates` · `/episodes` · `/job_status` · `/cancel_job` · `/retry_job` · `/help`
+
+## Engine commands (Node.js)
+```powershell
+node studio/make.mjs episodes/<slug>
+```
+That runs build → textcheck → narration → captions → render → verify and writes `episodes/<slug>/build/report.json`.
+The steps can also be run one by one: `node studio/build.mjs | textcheck.mjs | narration.mjs <script|tts|import|draft> | captions.mjs | render.mjs | verify.mjs | ocrcheck.mjs  episodes/<slug>`.
 
 ## Canva
 | Design | Link |
@@ -59,16 +77,10 @@ Narration priority when rendering: `audio/final` (Clipchamp) › `audio/tts` (SI
 | Style kit `DAHXW4ID8t0` | https://www.canva.com/d/BEQl_Usw6USqFSg |
 | Modrić episode pages `DAHXWxLVlU0` | https://www.canva.com/d/oNVMJ2IHUP0lzTC |
 | Story thumbnail `DAHXWz8LU_o` | https://www.canva.com/d/8NX1LYG9TnSBmAW |
-| Bale v1 `DAHXV3JkknM` | preserved |
 
-## More
-- [docs/ARABIC_TEXT_AUDIT.md](docs/ARABIC_TEXT_AUDIT.md): Arabic text defects found, causes, fixes, before/after
-- [docs/voice-audition/README.md](docs/voice-audition/README.md): voice options, licenses, audition clips
-- [docs/MEDIA.md](docs/MEDIA.md): what is on GitHub vs kept locally
-- Legacy Bale pilot: `scripts/*.mjs` + `episodes/bale/{,v2,v3}`, kept unchanged
+Automatic episodes do not need Canva: every page is drawn locally in the same style.
 
-## Tools (in `tools/`, not in git)
-- FFmpeg 9.0.2 (GPL); eSpeak NG (GPL-3.0, drafts only)
-- uv + Python 3.11 venv `tools/tts-venv`: PyTorch 2.6 (CUDA 12.4), SILMA TTS 1.0.5 (weights Apache-2.0, code MIT), CATT diacritizer (Apache-2.0), Vocos (MIT), faster-whisper with Whisper large-v3-turbo (MIT)
-- Model weights cache: `tools/hf-cache`
-- Piper is unpacked but unused: `ar_JO-kareem` has an unlicensed dataset
+## Repository rules
+- **Secrets:** only in `.env` (git-ignored). The old `bot.py` contained a token and is git-ignored. Reset that token.
+- **Kept local, not in git:** videos, audio, tools and models, and runtime data (`jobs/`, `logs/`, `research_cache/`). See [docs/MEDIA.md](docs/MEDIA.md).
+- **Legacy Bale pilot:** `scripts/*.mjs` + `episodes/bale/{,v2,v3}` are kept unchanged.

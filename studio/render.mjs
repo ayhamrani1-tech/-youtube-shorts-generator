@@ -15,6 +15,9 @@ const { width: W, height: H, fps } = ep;
 const TAIL = 0.35;
 ensureDir(p.segments);
 
+const capFile = join(dir, 'build', 'captions.json');
+const CAP = existsSync(capFile) ? readJSON(capFile) : { enabled: false, scenes: {} };
+
 // ---------- timeline ----------
 let t = 0;
 const tl = scenes.map((s) => {
@@ -35,7 +38,12 @@ const tl = scenes.map((s) => {
       return +Math.min(at, n / fps - 3.4 - (k - 2 - i) * 0.5).toFixed(3);
     });
   }
-  const row = { ...s, narr, narrSource, narrDur: +narrDur.toFixed(3), lead, start: +t.toFixed(3), frames: n, dur: +(n / fps).toFixed(3), stepTimes };
+  // captions (studio/captions.mjs) are used only if made from exactly this narration file
+  let cap = CAP.scenes?.[s.id];
+  if (cap && (cap.clip !== narr || !existsSync(narr) || cap.clipStamp !== `${statSync(narr).size}:${statSync(narr).mtimeMs}`)) {
+    console.log(`captions for ${s.id} are out of date (narration changed) — skipped; run studio/captions.mjs`); cap = null;
+  }
+  const row = { ...s, narr, narrSource, narrDur: +narrDur.toFixed(3), lead, start: +t.toFixed(3), frames: n, dur: +(n / fps).toFixed(3), stepTimes, cap };
   t += n / fps;
   return row;
 });
@@ -74,8 +82,15 @@ function videoSegment(s) {
     F.push(`[${sp}:v]format=rgba,scale=${m.size}:${m.size}[sp${j}]`, `[${cur}][sp${j}]overlay=x='${ex(0)}':y='${ex(1)}':eval=frame[mv${j}]`);
     cur = `mv${j}`;
   });
+  if (s.cap) { // word-by-word caption: crop the active word's strip from the scene's caption sheet
+    const B = CAP.band, k = inp(s.cap.sheet, s.dur + 0.2), at = (x) => (s.lead + x).toFixed(3);
+    const yExpr = `${B.h}*(${s.cap.events.map((e) => `${e.row}*between(t,${at(e.s)},${at(e.e)})`).join('+')})`;
+    const show = s.cap.lines.map((l) => `between(t,${at(l.s)},${at(l.e)})`).join('+');
+    F.push(`[${k}:v]format=rgba,crop=${W}:${B.h}:0:'${yExpr}'[cap]`, `[${cur}][cap]overlay=x=0:y=${B.y}:enable='${show}'[cv]`);
+    cur = 'cv';
+  }
   F.push(`[${cur}]trim=end_frame=${n},setpts=PTS-STARTPTS,format=yuv420p[out]`);
-  const sprites = (s.moves ?? []).map((m) => fileHash(join(ROOT, 'templates', 'kit', `${m.sprite}.png`)));
+  const sprites = (s.moves ?? []).map((m) => fileHash(join(ROOT, 'templates', 'kit', `${m.sprite}.png`))).concat(s.cap ? [fileHash(s.cap.sheet)] : []);
   const key = createHash('sha1').update(JSON.stringify([F, n, fileHash(s.frame), s.baseFrame && fileHash(s.baseFrame), sprites, (s.stepFrames ?? []).map(fileHash)])).digest('hex').slice(0, 16);
   const out = join(p.segments, `${s.id}.mp4`), stamp = out + '.key';
   if (existsSync(out) && existsSync(stamp) && readFileSync(stamp, 'utf8') === key) return { out, cached: true };
@@ -123,10 +138,28 @@ if (existsSync(outFile)) { // keep the previous render
   const arch = ensureDir(join(outDir, 'archive')), ts = statSync(outFile).mtime.toISOString().replace(/[:.]/g, '-').slice(0, 19);
   renameSync(outFile, join(arch, `${ep.slug}_${ts}.mp4`));
 }
-ffmpeg(['-i', vcat, '-i', acat, '-map', '0:v', '-map', '1:a', '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-shortest', '-movflags', '+faststart', outFile]);
-writeJSON(p.timeline, { total, slug: ep.slug, out: outFile, scenes: tl.map(({ id, chapter, layout, source, start, dur, lead, narrSource, narrDur, entrance, pops, fixed, frame, baseFrame, moves, psnrCrop, stepFrames, stepTimes }) =>
+// optional music bed: episode.json "music": { "file": "assets/music/x.mp3", "license": "…", "volume": 0.16 }
+// looped under the whole video, ducked (sidechain compression) whenever narration/effects play, then the full mix is
+// normalised to −14 LUFS (YouTube's reference). No music file = narration-only mix, unchanged.
+const music = ep.music?.file ? resolve(dir, ep.music.file) : null;
+if (music && !ep.music.license) throw new Error('music needs a "license" entry in episode.json (where it comes from and that reuse is allowed)');
+if (music && !existsSync(music)) throw new Error(`music file not found: ${ep.music.file}`);
+const mixArgs = music
+  ? ['-stream_loop', '-1', '-i', music, '-filter_complex',
+     `[2:a]aresample=44100,aformat=channel_layouts=stereo,volume=${ep.music.volume ?? 0.16},atrim=0:${total},afade=t=in:d=1.5,afade=t=out:st=${Math.max(0, total - 2.5)}:d=2.5[m];`
+     + `[1:a]asplit=2[voice][key];[m][key]sidechaincompress=threshold=0.02:ratio=10:attack=15:release=450[duck];`
+     + `[voice][duck]amix=inputs=2:normalize=0:duration=first,loudnorm=I=-14:TP=-1.5:LRA=11[mix]`, '-map', '0:v', '-map', '[mix]']
+  : ['-map', '0:v', '-map', '1:a'];
+ffmpeg(['-i', vcat, '-i', acat, ...mixArgs, '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', '-ar', '48000', '-shortest', '-movflags', '+faststart', outFile]);
+
+// subtitles file (upload it to YouTube with the video): one cue per caption line
+const srtTime = (x) => { const ms = Math.round(x * 1000), h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, sec = Math.floor(ms / 1000) % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')},${String(ms % 1000).padStart(3, '0')}`; };
+const cues = tl.flatMap((s) => (s.cap?.lines ?? []).map((l) => [s.start + s.lead + l.s, Math.min(s.start + s.dur, s.start + s.lead + l.e), l.text]));
+if (cues.length) writeFileSync(outFile.replace(/\.mp4$/, '.srt'), cues.map(([a, b, x], i) => `${i + 1}\n${srtTime(a)} --> ${srtTime(b)}\n${x}\n`).join('\n'), 'utf8');
+writeJSON(p.timeline, { total, slug: ep.slug, out: outFile, scenes: tl.map(({ id, chapter, layout, source, start, dur, lead, narrSource, narrDur, entrance, pops, fixed, frame, baseFrame, moves, psnrCrop, stepFrames, stepTimes, cap }) =>
   ({ id, chapter, layout: layout ?? source, start, dur, narrStart: +(start + lead).toFixed(3), narrDur, narrSource, entrance: entrance?.type,
-    settle: Math.max(0, ...(pops ?? []).map((q) => (q.at ?? 0) + 6 / (q.k ?? 9)), ...(moves ?? []).map((m) => m.pts.at(-1)[2]), ...(stepTimes ?? []).map((x) => x + 0.4)), fixed: !!fixed, frame, baseFrame, entranceD: entrance?.d, psnrCrop, stepFrames, stepTimes })) });
+    settle: Math.max(0, ...(pops ?? []).map((q) => (q.at ?? 0) + 6 / (q.k ?? 9)), ...(moves ?? []).map((m) => m.pts.at(-1)[2]), ...(stepTimes ?? []).map((x) => x + 0.4)), fixed: !!fixed, frame, baseFrame, entranceD: entrance?.d, psnrCrop, stepFrames, stepTimes, capBand: cap ? CAP.band : undefined, capEvents: cap?.events, capSheet: cap?.sheet })) });
 const src = tl.filter((s) => s.narration).reduce((m, s) => (m[s.narrSource] = (m[s.narrSource] ?? 0) + 1, m), {});
 console.log(`${ep.slug}: ${tl.length} scenes, ${total}s (${cached} video segments cached) → ${outFile}`);
 console.log(`narration: ${JSON.stringify(src)}`);

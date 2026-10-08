@@ -21,9 +21,14 @@ Canva holds the visual identity and each episode's own pages. The `studio/` engi
 - Git: repo https://github.com/ayhamrani1-tech/-youtube-shorts-generator (note the leading hyphen), branch `main`. Commit/push only when the user asks; never force-push. Videos/audio/tools stay local (docs/MEDIA.md).
 - No dashboards or publishing systems.
 
+- Discord: the Python bot (`bot/`) drives the Node engine via `node studio/make.mjs` (PROGRESS lines + build/report.json). Research is free and semi-automatic (Wikidata + Wikipedia, no LLM). Never send real Discord messages without the user's OK. Secrets only in `.env`. The user's original `bot.py` (hard-coded token) is git-ignored.
+- Research facts carry verified / single-source / disputed. The bot shows the plan before any render; disputed blocks approval.
+- In this Claude session the Bash sandbox blocks headless Edge: run engine commands (build/textcheck/make) through the PowerShell tool.
+
 ## Layout
-- `studio/` — engine: `build.mjs`, `textcheck.mjs`, `narration.mjs` (script/import/draft/tts), `render.mjs`, `verify.mjs`, `ocrcheck.mjs` + `ocr.ps1`, `tts_silma.py`, `asr.py`, `git-status.mjs`, `templates.mjs` (6 types), `html.mjs` (layouts), `lib.mjs`.
+- `studio/` — engine: `make.mjs` (one command), `build.mjs`, `textcheck.mjs`, `narration.mjs` (script/import/draft/tts), `captions.mjs`, `render.mjs` (music ducking, .srt), `verify.mjs`, `ocrcheck.mjs` + `ocr.ps1`, `align.mjs`, `tts_silma.py`, `asr.py`, `templates.mjs` (7 types incl. top-list), `html.mjs` (layouts), `lib.mjs`.
+- `bot/` — `main.py` (slash commands), `jobs.py` (queue), `pipeline.py`, `cli.py`, `delivery.py`, `config.py`, `research/` (wikidata, wikipedia, builder, arabic). Tests: `tests/` (`.venv\Scripts\python.exe -m pytest -q`).
 - `templates/registry.json` — video types (working vs planned) and Canva IDs. `templates/kit/` — style-kit PNGs. `templates/planned/` — example configs for planned types.
 - `episodes/<slug>/` — `episode.json`, `sources.md`, `ATTRIBUTION.md`, `canva/` (exports), `assets/`, `narration/` (SCRIPT.md, incoming/), `audio/final|draft/`, `build/` (generated).
 - Legacy Bale pipeline: `scripts/*.mjs` + `episodes/bale/{,v2,v3}` (kept for reproducibility).
-- Guides: `docs/دليل_التشغيل.md` (Arabic), `README.md`.
+- Guides: `README.md`, `docs/HOW_IT_WORKS.md`, `docs/TUTORIAL_TEMPLATES.md`, `docs/SETUP_WINDOWS.md`, `docs/DEPLOYMENT.md`, `docs/LIMITATIONS.md`, `docs/دليل_التشغيل.md` (Arabic).

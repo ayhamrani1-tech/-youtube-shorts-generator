@@ -94,3 +94,15 @@ def test_loan_back_to_a_former_club_matches_the_right_spell():
     box = Infobox("X", [InfoboxClub("Tottenham Hotspur F.C.", "Tottenham Hotspur", 2007, 2013, False),
                         InfoboxClub("Tottenham Hotspur F.C.", "Tottenham Hotspur (loan)", 2020, 2021, True)])
     assert [c.status for c in builder.cross_check(facts, box)] == ["verified", "verified"]
+
+
+def test_club_filter_accepts_mens_team_class_and_rejects_national_teams():
+    """Chelsea F.C. is typed only as Q103229495 ("men's association football team") on Wikidata; it must count as a club.
+    Bug found 2026-10-08 with Kevin De Bruyne (his Chelsea spell disappeared)."""
+    def ent(types, name):
+        return {"labels": {"en": {"value": name}},
+                "claims": {"P31": [{"mainsnak": {"datavalue": {"value": {"id": t}}}} for t in types]}}
+    assert wikidata.is_club(ent(["Q103229495"], "Chelsea F.C."))
+    assert wikidata.is_club(ent(["Q476028"], "Real Madrid CF"))
+    assert not wikidata.is_club(ent(["Q135408445"], "Croatia men's national football team"))
+    assert not wikidata.is_club(ent(["Q103229495"], "Belgium men's national football team"))

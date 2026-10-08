@@ -64,6 +64,9 @@ def cross_check(facts: PlayerFacts, box: Infobox | None) -> list[Check]:
         if not box:
             checks.append(Check(label, "single-source", "Wikipedia infobox unavailable"))
             continue
+        if s.source == "wikipedia":
+            checks.append(Check(label, "single-source", "only on Wikipedia (missing on Wikidata) — included, please confirm"))
+            continue
         same = [c for c in box.clubs if (s.enwiki and c.title == s.enwiki) or _norm(c.title) == _norm(s.name_en)
                 or _norm(c.shown) == _norm(s.name_en)]
         # a club can appear several times (e.g. a later loan back): compare with the closest spell, same loan status first
