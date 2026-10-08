@@ -45,3 +45,9 @@ desktop.ini
 
 # Your original bot.py contains a hard-coded Discord token: never commit it (see docs/AUDIT.md)
 /bot.py
+# Bot runtime data (local only): Python venv, job records + logs, research cache
+.venv/
+jobs/
+logs/
+research_cache/
+*.discord-preview.mp4

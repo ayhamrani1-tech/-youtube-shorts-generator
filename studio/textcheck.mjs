@@ -9,7 +9,7 @@
 import { spawnSync } from 'node:child_process';
 import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { ROOT, EDGE, readJSON, epPaths, ensureDir } from './lib.mjs';
+import { ROOT, EDGE, readJSON, writeJSON, epPaths, ensureDir } from './lib.mjs';
 import { sceneHTML } from './html.mjs';
 
 const dir = resolve(process.argv[2] ?? '.');
@@ -82,5 +82,6 @@ const rep = [`# Arabic text check — ${ep.slug} — ${new Date().toISOString()}
   '| scene | layout | font | letters | result |', '|---|---|---|---|---|', ...rows, '',
   problems.length ? `**${problems.length} scene(s) with issues.**` : '**No issues found.**'];
 writeFileSync(join(p.audio, '..', 'build', 'textcheck.md'), rep.join('\n') + '\n');
+writeJSON(join(dir, 'build', 'textcheck.json'), { ok: problems.length === 0, problems });
 console.log(problems.length ? problems.join('\n') : `${ep.slug}: text OK in ${scenes.filter((s) => s.source === 'html').length} HTML scenes`);
 process.exitCode = problems.length ? 1 : 0;

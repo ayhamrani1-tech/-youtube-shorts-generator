@@ -11,10 +11,15 @@ const POP_CARD = { A: 0.06, k: 8, w: 16 };
 function transferHistory(ep, dir) {
   const d = ep.data, stops = d.stops, n = stops.length;
   if (n < 2 || n > 9) throw new Error(`transfer-history supports 2–9 stops (got ${n})`);
-  const canva = (p) => ({ source: 'canva', file: join(dir, d.canvaPages.dir, `${String(p).padStart(2, '0')}.png`) });
+  // Canva pages are optional: automatically researched episodes (Discord bot) render every page locally.
+  const html = (layout, extra) => ({ source: 'html', layout, ...extra });
+  const canva = (p, fallback) => (d.canvaPages
+    ? { source: 'canva', file: join(dir, d.canvaPages.dir, `${String(p).padStart(2, '0')}.png`) }
+    : fallback);
   const rows = rowLayout(n);
   const S = [];
-  S.push({ id: 'hook', chapter: 'intro', ...canva(d.canvaPages.cover), seconds: 3.5, entrance: { type: 'push' }, narration: d.hook.narration });
+  S.push({ id: 'hook', chapter: 'intro', ...canva(d.canvaPages?.cover, html('ptitle', { kicker: d.hook.kicker ?? 'تحدّي', title: d.hook.title ?? 'خمّن اللاعب من انتقالاته', subtitle: d.hook.subtitle ?? `${n} محطات… لاعب واحد` })),
+    seconds: 3.5, entrance: d.canvaPages ? { type: 'push' } : { type: 'reveal', d: 0.4 }, narration: d.hook.narration });
   stops.forEach((s, i) => S.push({
     id: `c${i + 1}`, chapter: 'clues', source: 'html', layout: 'clue', header: d.header, stop: s, stops, index: i,
     seconds: s.seconds ?? 4.3, entrance: { type: 'cut' }, narrLead: 0.55, sfx: ['whoosh'],
@@ -25,15 +30,19 @@ function transferHistory(ep, dir) {
     id: `n${digit}`, chapter: 'countdown', source: 'html', layout: 'count', digit, stops, seconds: 1, fixed: true,
     entrance: { type: 'cut' }, sfx: ['tick'], pops: [{ r: [320, 250, 440, 440], at: 0, A: 0.2, k: 9, w: 18 }],
   }));
-  S.push({ id: 'mystery', chapter: 'answer', ...canva(d.canvaPages.mystery), seconds: 0.9, fixed: true, entrance: { type: 'flash', d: 0.3 } });
+  S.push({ id: 'mystery', chapter: 'answer', ...canva(d.canvaPages?.mystery, html('ptitle', { kicker: '؟', title: 'من هو؟', subtitle: '' })),
+    seconds: 0.9, fixed: true, entrance: { type: 'flash', d: 0.3 } });
   const answer = { ...d.answer, photoPath: d.answer.photo ? resolve(dir, d.answer.photo) : null };
+  const revealPage = answer.photoPath ? { source: 'html', layout: 'reveal', answer }
+    : canva(d.canvaPages?.reveal, html('revealName', { answer }));
   S.push({
-    id: 'reveal', chapter: 'answer', ...(answer.photoPath ? { source: 'html', layout: 'reveal', answer } : canva(d.canvaPages.reveal)),
+    id: 'reveal', chapter: 'answer', ...revealPage,
     seconds: 4.6, entrance: { type: 'flash', d: 0.3 }, narrLead: 0.55, sfx: ['chime'],
-    pops: [{ r: [60, 975, 960, 330], at: 0.3, A: 0.12, k: 6, w: 13 }], narration: d.reveal.narration,
+    pops: [{ r: revealPage.layout === 'revealName' ? [60, 560, 960, 420] : [60, 975, 960, 330], at: 0.3, A: 0.12, k: 6, w: 13 }], narration: d.reveal.narration,
   });
-  S.push({ id: 'outro', chapter: 'outro', ...canva(d.canvaPages.outro), seconds: 3.2, entrance: { type: 'cut' }, narrLead: 0.55,
-    pops: [{ r: [140, 700, 800, 160], at: 0, A: 0.1, k: 7, w: 14 }], narration: d.outro.narration });
+  const outroPage = canva(d.canvaPages?.outro, html('ptitle', { kicker: 'دورك', title: d.outro.title ?? 'هل عرفته قبل العدّ؟', subtitle: d.outro.subtitle ?? 'اكتب في التعليقات' }));
+  S.push({ id: 'outro', chapter: 'outro', ...outroPage, seconds: 3.2, entrance: d.canvaPages ? { type: 'cut' } : { type: 'reveal', d: 0.4 }, narrLead: 0.55,
+    pops: d.canvaPages ? [{ r: [140, 700, 800, 160], at: 0, A: 0.1, k: 7, w: 14 }] : [], narration: d.outro.narration });
   return S;
 }
 

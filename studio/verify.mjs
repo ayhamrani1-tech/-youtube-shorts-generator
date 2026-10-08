@@ -3,7 +3,7 @@
 // and compares every scene's settled frame with its source PNG (PSNR) to prove text was not altered.
 import { execFileSync, spawnSync } from 'node:child_process';
 import { join, resolve } from 'node:path';
-import { readJSON, ensureDir, epPaths, FFMPEG, FFPROBE } from './lib.mjs';
+import { readJSON, writeJSON, ensureDir, epPaths, FFMPEG, FFPROBE } from './lib.mjs';
 
 const dir = resolve(process.argv[2] ?? '.');
 const p = epPaths(dir);
@@ -85,6 +85,7 @@ for (const s of tl.scenes.filter((x) => x.stepTimes?.length)) {
   });
 }
 if (trans.length) checks.push(['mid-transition frames = blend of the scene\'s own layers (PSNR ≥ 30 dB)', tbad.length === 0, tbad.length ? tbad.join(' ') : `${trans.length} transitions, min ${tmin.toFixed(1)} dB`]);
+writeJSON(join(dir, "build", "verify.json"), { mp4, duration: +dur.toFixed(3), width: v?.width, height: v?.height, narration: srcs, checks: checks.map(([name, ok, info]) => ({ name, ok, info })) });
 for (const [name, ok, info] of checks) console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}  (${info})`);
 console.log(`Check frames: ${out}`);
 process.exitCode = checks.every((c) => c[1]) ? 0 : 1;

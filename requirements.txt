@@ -1,0 +1,5 @@
+# Discord bot + research (Python 3.11+; tested with Python 3.14.8 on Windows)
+# The video engine itself is Node.js (studio/*.mjs) — see README.md.
+discord.py>=2.4,<3        # maintained Discord library (slash commands, buttons)
+pytest>=8                 # offline tests: python -m pytest
+# The local voice and speech recognition run in a separate venv (tools/tts-venv), see docs/SETUP_WINDOWS.md.

@@ -1,0 +1,98 @@
+{
+  "schema": "fvs/1",
+  "type": "story",
+  "slug": "gareth-bale-story",
+  "title_ar": "قصة غاريث بيل",
+  "subject": {
+    "name_ar": "غاريث بيل",
+    "name_en": "Gareth Bale",
+    "wikidata": "Q184586"
+  },
+  "language": "ar",
+  "orientation": "landscape",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "targetSeconds": [
+    20,
+    1200
+  ],
+  "voice": {
+    "engine": "clipchamp",
+    "status": "pending",
+    "auto": "silma"
+  },
+  "generated": {
+    "by": "bot/research",
+    "retrieved": "2026-10-08",
+    "approved": false,
+    "note": "Skeleton from verified data only. Add chapters (with sources) before publishing."
+  },
+  "sources": "sources.md",
+  "data": {
+    "intro": {
+      "kicker": "قصة لاعب",
+      "title": "غاريث بيل",
+      "subtitle": "ويلز",
+      "seconds": 5,
+      "narration": "هذه قصة غاريث بيل."
+    },
+    "chapters": [
+      {
+        "title": "المسيرة",
+        "subtitle": "من نادٍ إلى نادٍ",
+        "narration": "الفصل الأول: المسيرة.",
+        "scenes": [
+          {
+            "layout": "timeline",
+            "heading": "محطات المسيرة (1)",
+            "seconds": 8,
+            "highlight": 2,
+            "items": [
+              {
+                "year": "2006 – 2007",
+                "text": "نادي ساوثهامبتون"
+              },
+              {
+                "year": "2007 – 2013",
+                "text": "توتنهام هوتسبير"
+              },
+              {
+                "year": "2013",
+                "text": "ريال مدريد"
+              }
+            ],
+            "narration": "نادي ساوثهامبتون، ثم توتنهام هوتسبير، ثم ريال مدريد."
+          },
+          {
+            "layout": "timeline",
+            "heading": "محطات المسيرة (2)",
+            "seconds": 8,
+            "highlight": 2,
+            "items": [
+              {
+                "year": "2020 – 2021",
+                "text": "توتنهام هوتسبير (إعارة)"
+              },
+              {
+                "year": "2021 – 2022",
+                "text": "ريال مدريد (العودة)"
+              },
+              {
+                "year": "2022",
+                "text": "نادي لوس أنجلوس"
+              }
+            ],
+            "narration": "توتنهام هوتسبير على سبيل الإعارة، ثم ريال مدريد مرة أخرى، ثم نادي لوس أنجلوس."
+          }
+        ]
+      }
+    ],
+    "end": {
+      "title": "ما أجمل محطة في مسيرة غاريث بيل؟",
+      "cta": "اكتب رأيك في التعليقات",
+      "seconds": 5,
+      "narration": "ما أجمل محطة في مسيرته؟ اكتب رأيك في التعليقات."
+    }
+  }
+}
