@@ -1,4 +1,4 @@
-# SILMA narration check — 2026-10-08T17:23:35.051Z
+# SILMA narration check — 2026-10-08T17:42:07.847Z
 
 Voice reference: `C:\Users\User\Desktop\FootballVideoStudio\tools\tts-venv\Lib\site-packages\silma_tts\infer\ref_audio_samples\ar.ref.24k.wav`
 
